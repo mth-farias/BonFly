@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.6.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
+                 xmlns:scr="clr-namespace:Bonsai.Scripting;assembly=Bonsai.Scripting"
+                 xmlns="https://bonsai-rx.org/2018/workflow">
+  <Workflow>
+    <Nodes>
+      <Expression xsi:type="WorkflowInput">
+        <Name>Source1</Name>
+      </Expression>
+      <Expression xsi:type="WorkflowInput">
+        <Name>Source2</Name>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Item1</Selector>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Item2</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="rx:Zip" />
+      </Expression>
+      <Expression xsi:type="scr:PythonTransform">
+        <scr:Name>OrientVisualizer</scr:Name>
+        <scr:Script>
+import clr
+clr.AddReference("OpenCV.Net")
+from OpenCV.Net import *
+from math import sin, cos, pi
+
+font = None
+def load():
+  global font
+  font = Font(2,2)
+
+@returns(IplImage)
+def process(value):
+  output =  value.Item1.Clone()
+  image = value.Item1.Clone()
+  output = IplImage(image.Size, image.Depth, 3)
+  CV.CvtColor(image,output,ColorConversion.Gray2Bgr)
+
+  headState = value.Item2
+  tailState = value.Item3
+
+
+  CV.Circle(output, Point(headState), 3, Scalar.Rgb(204, 0, 0), -1)
+
+  CV.Circle(output, Point(tailState), 3, Scalar.Rgb(0, 0, 204), -1)
+  return output</scr:Script>
+      </Expression>
+      <Expression xsi:type="WorkflowOutput" />
+    </Nodes>
+    <Edges>
+      <Edge From="0" To="4" Label="Source1" />
+      <Edge From="1" To="2" Label="Source1" />
+      <Edge From="1" To="3" Label="Source1" />
+      <Edge From="2" To="4" Label="Source2" />
+      <Edge From="3" To="4" Label="Source3" />
+      <Edge From="4" To="5" Label="Source1" />
+      <Edge From="5" To="6" Label="Source1" />
+    </Edges>
+  </Workflow>
+</WorkflowBuilder>

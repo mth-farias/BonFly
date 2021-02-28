@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.6.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:cv="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision"
+                 xmlns="https://bonsai-rx.org/2018/workflow">
+  <Workflow>
+    <Nodes>
+      <Expression xsi:type="SubscribeSubject">
+        <Name>Arena1</Name>
+      </Expression>
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\ArenaDrawer.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Scale.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Background.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Centroid.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\ValidPoint.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Stabilizer.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Zoomer.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\PxChange.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\Zoomer.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\HeadTail.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Extensions\OrientationVisualizer.bonsai" />
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:FileCapture">
+          <cv:FileName>Example\LC4_X_ChS-Retinal_Pulsed-6days-FH0-2021-01-20T15_28_10.avi</cv:FileName>
+          <cv:PlaybackRate>1000</cv:PlaybackRate>
+          <cv:StartPosition>0</cv:StartPosition>
+          <cv:PositionUnits>Frames</cv:PositionUnits>
+          <cv:Loop>false</cv:Loop>
+          <cv:Playing>true</cv:Playing>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:Grayscale" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:Crop">
+          <cv:RegionOfInterest>
+            <cv:X>0</cv:X>
+            <cv:Y>0</cv:Y>
+            <cv:Width>640</cv:Width>
+            <cv:Height>512</cv:Height>
+          </cv:RegionOfInterest>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="PublishSubject">
+        <Name>Arena1</Name>
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge From="0" To="1" Label="Source1" />
+      <Edge From="0" To="3" Label="Source1" />
+      <Edge From="1" To="2" Label="Source1" />
+      <Edge From="3" To="7" Label="Source1" />
+      <Edge From="3" To="9" Label="Source1" />
+      <Edge From="3" To="4" Label="Source1" />
+      <Edge From="4" To="5" Label="Source1" />
+      <Edge From="5" To="6" Label="Source1" />
+      <Edge From="5" To="9" Label="Source2" />
+      <Edge From="6" To="7" Label="Source2" />
+      <Edge From="7" To="8" Label="Source1" />
+      <Edge From="9" To="10" Label="Source1" />
+      <Edge From="9" To="11" Label="Source1" />
+      <Edge From="10" To="11" Label="Source2" />
+      <Edge From="12" To="13" Label="Source1" />
+      <Edge From="13" To="14" Label="Source1" />
+      <Edge From="14" To="15" Label="Source1" />
+    </Edges>
+  </Workflow>
+</WorkflowBuilder>
