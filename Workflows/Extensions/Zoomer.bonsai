@@ -33,8 +33,8 @@
             <cv:Y>0</cv:Y>
           </cv:Pivot>
           <cv:Translation>
-            <cv:X>-499.75</cv:X>
-            <cv:Y>-341.497253</cv:Y>
+            <cv:X>-244.369629</cv:X>
+            <cv:Y>-9.199703</cv:Y>
           </cv:Translation>
           <cv:Rotation>0</cv:Rotation>
           <cv:Scale>
@@ -50,7 +50,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="cv:WarpAffine">
-          <cv:Transform>1,0,-499.75;0,1,-341.4973</cv:Transform>
+          <cv:Transform>1,0,-244.3696;0,1,-9.199703</cv:Transform>
           <cv:Flags>Linear</cv:Flags>
           <cv:FillValue>
             <cv:Val0>71</cv:Val0>

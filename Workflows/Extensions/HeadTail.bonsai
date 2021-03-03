@@ -19,7 +19,7 @@
             <cv:Val3>0</cv:Val3>
           </cv:Lower>
           <cv:Upper>
-            <cv:Val0>125</cv:Val0>
+            <cv:Val0>255</cv:Val0>
             <cv:Val1>255</cv:Val1>
             <cv:Val2>255</cv:Val2>
             <cv:Val3>255</cv:Val3>
@@ -50,7 +50,7 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="cv:RangeThreshold">
           <cv:Lower>
-            <cv:Val0>125</cv:Val0>
+            <cv:Val0>136.3953488372093</cv:Val0>
             <cv:Val1>0</cv:Val1>
             <cv:Val2>0</cv:Val2>
             <cv:Val3>0</cv:Val3>
