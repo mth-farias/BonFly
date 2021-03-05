@@ -15,7 +15,7 @@ public class MultiVisualizer
     [Description("Method to use for comparing pixels. Darkest maintains the darkest values for each pixel. Brightest maintains the brightest values for each pixel.")]
     public int RadiusSize { get; set; } 
     //public Scalar[] Collors { get; set; } 
-    public IObservable<IplImage> Process(IObservable<Tuple<IplImage, ConnectedComponentCollection>> source)
+    public IObservable<IplImage> Process(IObservable<Tuple<IplImage, Point2f[]>> source)
     {
         return source.Select(value => 
         {
@@ -43,7 +43,7 @@ public class MultiVisualizer
             foreach (var item in value.Item2)
             {
                 enumCollor.MoveNext();
-                CV.Circle(output, new Point(item.Centroid), RadiusSize, enumCollor.Current, 2);
+                CV.Circle(output, new Point(item), RadiusSize, enumCollor.Current, 2);
             }
             
             return output;
