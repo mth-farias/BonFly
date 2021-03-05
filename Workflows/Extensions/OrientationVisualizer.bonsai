@@ -2,7 +2,7 @@
 <WorkflowBuilder Version="2.6.0"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
-                 xmlns:scr="clr-namespace:Bonsai.Scripting;assembly=Bonsai.Scripting"
+                 xmlns:p1="clr-namespace:;assembly=Extensions"
                  xmlns="https://bonsai-rx.org/2018/workflow">
   <Workflow>
     <Nodes>
@@ -21,34 +21,8 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="rx:Zip" />
       </Expression>
-      <Expression xsi:type="scr:PythonTransform">
-        <scr:Name>OrientVisualizer</scr:Name>
-        <scr:Script>
-import clr
-clr.AddReference("OpenCV.Net")
-from OpenCV.Net import *
-from math import sin, cos, pi
-
-font = None
-def load():
-  global font
-  font = Font(2,2)
-
-@returns(IplImage)
-def process(value):
-  output =  value.Item1.Clone()
-  image = value.Item1.Clone()
-  output = IplImage(image.Size, image.Depth, 3)
-  CV.CvtColor(image,output,ColorConversion.Gray2Bgr)
-
-  headState = value.Item2
-  tailState = value.Item3
-
-
-  CV.Circle(output, Point(headState), 3, Scalar.Rgb(204, 0, 0), -1)
-
-  CV.Circle(output, Point(tailState), 3, Scalar.Rgb(0, 0, 204), -1)
-  return output</scr:Script>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="p1:HeadTailVisualizer" />
       </Expression>
       <Expression xsi:type="WorkflowOutput" />
     </Nodes>
