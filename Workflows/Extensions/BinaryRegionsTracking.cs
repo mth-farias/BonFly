@@ -13,6 +13,7 @@ using Bonsai.Vision;
 
 public class BinaryRegionsTracking
 {
+    public int ExpectedConnectedComponents { get; set; }
     public struct DistanceConnectedComponentCollection
     {
         public double Distance;
@@ -32,10 +33,24 @@ public class BinaryRegionsTracking
         {
             double totalDistance = 0;
             var newPermutationCopy = new ConnectedComponentCollection(current.ImageSize);
-            for (int i = 0; i < current.Count; i++)
+            for (int i = 0; i < previous.Count; i++)
             {
-                totalDistance += distance(current[i].Centroid,previous[i].Centroid);
-                newPermutationCopy.Add(current[i]);
+                if (float.IsNaN(current[i].Centroid.X))
+                {
+                    //var temp = new ConnectedComponent();
+                    var temp = ConnectedComponent.FromContour(previous[i].Contour);
+                    temp.Centroid = new OpenCV.Net.Point2f(previous[i].Centroid.X,previous[i].Centroid.Y);
+                    temp.Area = previous[i].Area;
+                    temp.MajorAxisLength = previous[i].MajorAxisLength;
+                    temp.MinorAxisLength = previous[i].MinorAxisLength;
+                    temp.Orientation = previous[i].Orientation;
+                    newPermutationCopy.Add(temp);
+                }
+                else
+                {
+                    totalDistance += distance(current[i].Centroid,previous[i].Centroid);
+                    newPermutationCopy.Add(current[i]);
+                }
             }
             return new DistanceConnectedComponentCollection() {Distance = totalDistance, ConnCompCollection = newPermutationCopy};
         }
@@ -80,17 +95,27 @@ public class BinaryRegionsTracking
                 previous = new ConnectedComponentCollection(value,value.ImageSize);
                 return previous; //bestPermute.permuted;
             }
-            
+            var VirtualConnectedComponent = new ConnectedComponent();
+            VirtualConnectedComponent.Centroid = new OpenCV.Net.Point2f(float.NaN,float.NaN);
+
             var valueCopy = new ConnectedComponentCollection(value.ImageSize);
             for (int i = 0; i < value.Count; i++)
             {
                 valueCopy.Add(value[i]);
             }
+
+            if (value.Count <  ExpectedConnectedComponents)
+                 for (int i =  value.Count; i < ExpectedConnectedComponents; i++)
+                 {
+                    //var temp = ConnectedComponent.FromContour(value[0].Contour);
+                    //temp.Centroid = new OpenCV.Net.Point2f(float.NaN,float.NaN);
+                    valueCopy.Add(VirtualConnectedComponent);
+                 }
+
             var bestPermute = permute(valueCopy,0,valueCopy.Count-1,previous);
             previous = bestPermute.ConnCompCollection;
 
             return bestPermute.ConnCompCollection;
-
         });
     }
 }
