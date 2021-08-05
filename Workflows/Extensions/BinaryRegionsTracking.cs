@@ -36,6 +36,7 @@ public class BinaryRegionsTracking
             for (int i = 0; i < previous.Count; i++)
             {
                 if (float.IsNaN(current[i].Centroid.X))
+                // maintain same state as previous frame
                 {
                     //var temp = new ConnectedComponent();
                     var temp = ConnectedComponent.FromContour(previous[i].Contour);
@@ -103,7 +104,9 @@ public class BinaryRegionsTracking
             {
                 valueCopy.Add(value[i]);
             }
-
+            
+            // less detected individuals in this frame than expected (specified)
+            // TO DO: til min(previous.count, ExpectedConnectedComponents);
             if (value.Count <  ExpectedConnectedComponents)
                  for (int i =  value.Count; i < ExpectedConnectedComponents; i++)
                  {

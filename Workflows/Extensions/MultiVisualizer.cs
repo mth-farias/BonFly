@@ -14,7 +14,15 @@ public class MultiVisualizer
 {
     [Description("Method to use for comparing pixels. Darkest maintains the darkest values for each pixel. Brightest maintains the brightest values for each pixel.")]
     public int RadiusSize { get; set; } 
-    //public Scalar[] Collors { get; set; } 
+    //public Scalar[] Collors { get; set; }
+    Scalar ScalarHSV2BGR(double H, double S, double V) 
+    {
+        Mat rgb = new Mat(1,1, Depth.U8, 3);
+        Mat hsv = new Mat(1,1, Depth.U8, 3);
+        hsv[0] = Scalar.Rgb(V,S,H);
+        CV.CvtColor(hsv, rgb, ColorConversion.Hsv2Bgr);
+        return rgb[0];
+    }
     public IObservable<IplImage> Process(IObservable<Tuple<IplImage, Point2f[]>> source)
     {
         return source.Select(value => 
@@ -23,27 +31,11 @@ public class MultiVisualizer
             var image = value.Item1;
             var output = new IplImage(image.Size,image.Depth, 3);
             CV.CvtColor(image, output,ColorConversion.Gray2Bgr);
-            // CV.Circle(output, new Point(value.Item2), RadiusSize, Collors[0], 2);
-            // CV.Circle(output, new Point(value.Item3), RadiusSize, Collors[1] , 2);
-            // CV.Circle(output, new Point(value.Item4), RadiusSize, Collors[2] , 2);
-            // CV.Circle(output, new Point(value.Item5), RadiusSize, Collors[3] , 2);
-            // CV.Circle(output, new Point(value.Item6), RadiusSize, Collors[4] , 2);
-            // CV.Circle(output, new Point(value.Item6), RadiusSize, Collors[4] , 2);
             
-            var colorArray = new List<Scalar>()
+            int step = 180/value.Item2.Length;
+            for (int i = 0; i < value.Item2.Length; i++)
             {
-                Scalar.Rgb(255, 0, 0),
-                Scalar.Rgb(0, 255, 0),
-                Scalar.Rgb(0, 0, 255),
-                Scalar.Rgb(255, 0, 127),
-                Scalar.Rgb(255, 255, 0)
-            };
-            var enumCollor = colorArray.GetEnumerator();
-            
-            foreach (var item in value.Item2)
-            {
-                enumCollor.MoveNext();
-                CV.Circle(output, new Point(item), RadiusSize, enumCollor.Current, 2);
+                CV.Circle(output, new Point(value.Item2[i]), RadiusSize, ScalarHSV2BGR(i*step,255,255), 2);
             }
             
             return output;
